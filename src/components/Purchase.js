@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Web3 from "web3";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const web3 = new Web3('http://localhost:8545');
 
@@ -226,7 +226,7 @@ class Purchase extends Component {
             .then((result) => {
                 console.log(result);
                 alert("Purchase made");
-                <Redirect to="/dashboard" />
+                <Navigate to="/dashboard" />
             })
             .catch((error) => {
                 console.error("Transaction error:", error);

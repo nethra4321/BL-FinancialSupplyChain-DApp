@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Web3 from "web3";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const web3 = new Web3("http://127.0.0.1:8545");
 
@@ -199,7 +199,7 @@ class Loan extends Component {
             .then((res) => {
                 console.log(res);
                 alert("Loan made");
-                <Redirect to="/dashboard" />
+                <Navigate to="/dashboard" />
             })
             .catch((err) => {
                 console.log(err);
