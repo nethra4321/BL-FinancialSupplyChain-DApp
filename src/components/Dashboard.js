@@ -16,6 +16,9 @@ class Dashboard extends Component {
     render() {
         return (
         <>
+         <br></br>
+             <Link to="/" className="m-3 text-decoration-underline">Go Back</Link>
+            <br></br>
         <div className="container m-3 p-3">
             Dashboard
         </div>

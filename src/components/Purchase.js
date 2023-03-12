@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Web3 from "web3";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const web3 = new Web3('http://localhost:8545');
 
@@ -225,6 +225,8 @@ class Purchase extends Component {
             .send({from:buyer_address,value:web3.utils.toWei(this.state.purchase_form.amount.toString(), "ether"), gas:200000})
             .then((result) => {
                 console.log(result);
+                alert("Purchase made");
+                <Redirect to="/dashboard" />
             })
             .catch((error) => {
                 console.error("Transaction error:", error);
@@ -259,7 +261,7 @@ class Purchase extends Component {
                     Back
                 </button> */}
             <br></br>
-            <Link to="/" className="btn btn-outline-primary">Go Back</Link>
+            <Link to="/" className="m-3 text-decoration-underline">Go Back</Link>
             <br></br>
             <div className="container m-3 p-3">
                 <div className="flex w-screen h-screen justify-center text-center">

@@ -25,9 +25,9 @@ class Home extends Component {
         else {
           alert("You need to set up Metamask to login");
         }
-    
         return provider;
       }
+
       connect = async() => {
         // console.log("use effect works");
         const provider = this.detectCurrentProvider();
@@ -44,37 +44,45 @@ class Home extends Component {
               console.log(this.state.isConnected);
               console.log(this.state.ethBalance);
               console.log(this.state.buyer_account);
+              window.localStorage.setItem("buyer_account",this.state.buyer_account)
               //gets updated
             })
-            // ethBalance:accountBalance
-            // console.log(this.state.ethBalance);
-            // console.log(this.state.value); //here set state doesnt update
-            //WORKS
         }
       }
       
       disconnect = () => {
         this.setState({isConnected:false});
+        window.localStorage.removeItem("buyer_account");
+      }
+
+      componentDidMount = async() => {
+        let buyer_account = window.localStorage.getItem("buyer_account");
+        if(buyer_account !== null) {
+          const web3 = new Web3("http://127.0.0.1:8545");
+          let account_balance = await web3.eth.getBalance(buyer_account);
+          this.setState({...this.state, buyer_account:buyer_account, ethBalance: account_balance},()=>{})
+        }
       }
     
       render() {
         let displayed_balance = this.state.ethBalance/1e18;
         console.log(this.state.buyer_account);
         console.log(this.state.eth_balance);
+        console.log(window.localStorage.getItem("buyer_account"));
         return (
           <div className="container m-3 p-3">
           
           <div className="container m-3">
-            {!this.state.isConnected && (
+            {(window.localStorage.getItem("buyer_account")===null && !this.state.isConnected) && (
             <button className="btn btn-primary" onClick={this.connect}>
               Login via metamask
               </button>
             )}
             </div>
             <div className="container m-3">
-            {this.state.isConnected && (
+            { (window.localStorage.getItem("buyer_account") !== null || this.state.isConnected ) && (
                 <React.Fragment>
-                  <p className="display-4 text-success">You are connected to Metamask</p>
+                  <p className="display-4 text-success">BL DApp</p>
                   <br></br>
                   <p className="display-4">Balance is: {displayed_balance} ETH</p>
                   <br></br>
