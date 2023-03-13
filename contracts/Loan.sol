@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
- enum LoanStatus {Pending, Approved, Rejected}
+//  enum LoanStatus {Pending, Approved, Rejected}
 
 contract Loan {
     
@@ -9,7 +9,7 @@ contract Loan {
         address payable borrower;
         address provider;
         uint256 amount;    
-        LoanStatus status;
+        // LoanStatus status;
         bool approved;
         uint256 interest_rate; //128 bytes and 10 decimal places   
     } 
@@ -34,7 +34,7 @@ contract Loan {
         return address(this).balance;
     }
 
- event NewLoanPlaced(address borrower, address provider, uint256 amount, LoanStatus status, uint256 interest_rate);
+ event NewLoanPlaced(address borrower, address provider, uint256 amount, uint256 interest_rate);
 
     function approve_loan(address payable _borrower, address _provider, uint256 _interest_rate, uint256 _amount) public payable {
 
@@ -44,10 +44,10 @@ contract Loan {
         loan.interest_rate = _interest_rate;
        
         require(address(_provider).balance >= _amount, "Provider doesn't have enough funds");
-        loan.status = LoanStatus.Approved;
+        // loan.status = LoanStatus.Approved;
 
         loan.borrower.transfer(msg.value);
 
-        emit NewLoanPlaced(loan.borrower, loan.provider, loan.amount, loan.status, loan.interest_rate);
+        emit NewLoanPlaced(loan.borrower, loan.provider, loan.amount, loan.interest_rate);
     }
 }

@@ -28,10 +28,8 @@ contract Purchase {
     function placePurchaseOrder(address _buyer, address _vendor, string calldata _product, uint256 _quantity, uint256 _amount) public payable {
 
         bytes32 orderID = keccak256(abi.encodePacked(_buyer,_vendor,_product,_quantity,_amount));
-        Order storage purchase_order = orders[orderID];
-
+        Order memory purchase_order;
         // require(purchase_order.status == OrderStatus.Not_Started, "Order has already been started");
-
         purchase_order.buyer = _buyer;
         purchase_order.vendor = _vendor;
         purchase_order.product = _product;
@@ -39,6 +37,7 @@ contract Purchase {
         purchase_order.amount = _amount;
         // purchase_order.status = OrderStatus.Order_Placed;
 
+        orders[orderID] = purchase_order;
         emit NewOrderPlaced(orderID, _buyer, _vendor, _product, _quantity, _amount);
 
         // payable(_vendor).transfer(_amount);
