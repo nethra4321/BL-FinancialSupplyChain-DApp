@@ -6,7 +6,7 @@ import Purchase from "./components/Purchase";
 import Home from "./components/Home";
 import Loan from "./components/Loan";
 import Dashboard from "./components/Dashboard";
-
+import EventDashboard from "./components/EventDashboard";
 class App extends Component {
   
   render() {
@@ -19,6 +19,7 @@ class App extends Component {
             {/* <Route index element={<Home />} /> */}
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/loan" element={<Loan />} />
+            <Route path="/event-dashboard" element={<EventDashboard />} />
           </Routes>
         </BrowserRouter>
       </>

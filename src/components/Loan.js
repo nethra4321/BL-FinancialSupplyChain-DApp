@@ -2,8 +2,128 @@ import React, {Component} from "react";
 import Web3 from "web3";
 import { Link, Navigate } from "react-router-dom";
 
-const web3 = new Web3("http://127.0.0.1:8545");
-
+const web3 = new Web3("http://127.0.0.1:7545");
+const loanABI = [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "interest_rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewLoanPlaced",
+      "type": "event"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback",
+      "payable": true
+    },
+    {
+      "inputs": [],
+      "name": "loan",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "interest_rate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive",
+      "payable": true
+    },
+    {
+      "inputs": [],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_provider",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_interest_rate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve_loan",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    }
+  ];
+  const loanAddress="0xB985f5F4a9742e99e3baF66452a1C12753974C20";
 class Loan extends Component {
 
     constructor(props) {
@@ -16,8 +136,8 @@ class Loan extends Component {
                 interest_rate: 0,
             },
             finance_providers: [
-                { provider: 'ICICI', address:'0x71fD8848E137329Fee64C8a58572301d8451e3AF', interest_rate: 20},
-                { provider: 'SBI', address:'0x3b8b721FFb01920cDC0F7C0B5E5655C25FC33Bb0', interest_rate: 12}
+                { provider: 'ICICI', address:'0x58ad76d7b2a6E83CAb4b1122bfAbf42fc2abe28d', interest_rate: 20},
+                { provider: 'SBI', address:'0x46B1542FDa2cD96272690aEA1fEe9eC9E35Db806', interest_rate: 12}
             ]
         }
     }
@@ -48,138 +168,6 @@ class Loan extends Component {
             return;
         }
 
-        const loanABI = [
-            {
-              "anonymous": false,
-              "inputs": [
-                {
-                  "indexed": false,
-                  "internalType": "address",
-                  "name": "borrower",
-                  "type": "address"
-                },
-                {
-                  "indexed": false,
-                  "internalType": "address",
-                  "name": "provider",
-                  "type": "address"
-                },
-                {
-                  "indexed": false,
-                  "internalType": "uint256",
-                  "name": "amount",
-                  "type": "uint256"
-                },
-                {
-                  "indexed": false,
-                  "internalType": "enum LoanStatus",
-                  "name": "status",
-                  "type": "uint8"
-                },
-                {
-                  "indexed": false,
-                  "internalType": "uint256",
-                  "name": "interest_rate",
-                  "type": "uint256"
-                }
-              ],
-              "name": "NewLoanPlaced",
-              "type": "event"
-            },
-            {
-              "stateMutability": "payable",
-              "type": "fallback",
-              "payable": true
-            },
-            {
-              "inputs": [],
-              "name": "loan",
-              "outputs": [
-                {
-                  "internalType": "address payable",
-                  "name": "borrower",
-                  "type": "address"
-                },
-                {
-                  "internalType": "address",
-                  "name": "provider",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "amount",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "enum LoanStatus",
-                  "name": "status",
-                  "type": "uint8"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "approved",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "interest_rate",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function",
-              "constant": true
-            },
-            {
-              "stateMutability": "payable",
-              "type": "receive",
-              "payable": true
-            },
-            {
-              "inputs": [],
-              "name": "getBalance",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function",
-              "constant": true
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address payable",
-                  "name": "_borrower",
-                  "type": "address"
-                },
-                {
-                  "internalType": "address",
-                  "name": "_provider",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "_interest_rate",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "_amount",
-                  "type": "uint256"
-                }
-              ],
-              "name": "approve_loan",
-              "outputs": [],
-              "stateMutability": "payable",
-              "type": "function",
-              "payable": true
-            }
-          ];
-          const loanAddress="0xdD47398fD214Fb2875B335BF32f31dC0305EaB37";
           const loanInstance = new web3.eth.Contract(loanABI,loanAddress);
           console.log(loanInstance);
           const accounts = await web3.eth.getAccounts();

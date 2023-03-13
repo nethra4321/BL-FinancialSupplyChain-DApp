@@ -58,7 +58,7 @@ class Home extends Component {
       componentDidMount = async() => {
         let buyer_account = window.localStorage.getItem("buyer_account");
         if(buyer_account !== null) {
-          const web3 = new Web3("http://127.0.0.1:8545");
+          const web3 = new Web3("http://127.0.0.1:7545");
           let account_balance = await web3.eth.getBalance(buyer_account);
           this.setState({...this.state, buyer_account:buyer_account, ethBalance: account_balance},()=>{})
         }
@@ -87,17 +87,21 @@ class Home extends Component {
                   <p className="display-4">Balance is: {displayed_balance} ETH</p>
                   <br></br>
                   <div className="text-center">
-                    {/* <button className="btn btn-outline-danger">Place order</button> */}
-                    <Link to={{pathname:"/purchase"}} state={{ buyer_account: this.state.buyer_account, ethBalance: this.state.ethBalance}} className="btn btn-outline-danger">Place order</Link>
+                    {/* <button className="btn btn-outline-primary">Place order</button> */}
+                    <Link to={{pathname:"/purchase"}} state={{ buyer_account: this.state.buyer_account, ethBalance: this.state.ethBalance}} className="btn btn-danger">Place order</Link>
                   </div>
                   <br></br><br></br>
                   <div className="text-center">
-                    {/* <button className="btn btn-outline-danger">Place loan</button> */}
-                    <Link to="/loan" className="btn btn-outline-danger">Place loan</Link>
+                    {/* <button className="btn btn-outline-primary">Place loan</button> */}
+                    <Link to="/loan" className="btn btn-danger">Place loan</Link>
                   </div>
                   <br></br><br></br>
                   <div className="text-center">
-                  <Link to="/dashboard" className="btn btn-outline-danger">View Dashboard</Link>
+                  <Link to="/dashboard" className="btn btn-danger">View Transaction History</Link>
+                  </div>
+                  <br></br><br></br>
+                  <div className="text-center">
+                  <Link to="/event-dashboard" className="btn btn-danger">View Event History</Link>
                   </div>
                   <br></br><br></br>
                   <div className="text-center">

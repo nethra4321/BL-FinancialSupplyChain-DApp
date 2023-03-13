@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Web3 from "web3";
 import Transaction from "./Transaction";
 
-const web3 = new Web3("http://127.0.0.1:8545");
+const web3 = new Web3("http://127.0.0.1:7545");
 let transaction_list = [];
 let tx_hash_list = [];
 
@@ -14,7 +14,7 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             user_address: '',
-            transactions: []
+            transactions: [],
         }
     }
 
@@ -86,7 +86,7 @@ class Dashboard extends Component {
                   "gas": e.gas,
                   "input": e.input
                 })
-
+                
                 this.setState({...this.state, transactions:[...this.state.transactions,transaction_list[transaction_list.length-1]]},()=>{})
               }
             })
