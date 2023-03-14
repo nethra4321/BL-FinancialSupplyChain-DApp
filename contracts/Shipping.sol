@@ -16,7 +16,9 @@ contract Shipping {
         uint256 amount;
     }
 
-    mapping (bytes32 => Ship) public ship_orders;
+    mapping (bytes32 => Ship) public shipMapping;
+    Ship[] public ships;
+    bytes32[] public shipAddresses;
 
     event ProductShipped(bytes32 shipID, uint8 num_days, bytes32 orderID, address buyer, address vendor, string product, uint256 qty, uint256 amount);
 
@@ -37,8 +39,10 @@ contract Shipping {
         ship_order.product = _product;
         ship_order.qty = _qty;
         ship_order.amount = _amount;
-        ship_orders[ship_order_ID] = ship_order;
-        
+        shipMapping[ship_order_ID] = ship_order;
+        ships.push(ship_order);
+        shipAddresses.push(ship_order_ID);
+
         emit ProductShipped(ship_order_ID, generateRandomNumber(), ship_order.orderID, ship_order.buyer, ship_order.vendor, ship_order.product, ship_order.qty, ship_order.amount);
     }
 }

@@ -303,7 +303,7 @@ const shippingABI = [
     "type": "function"
   }
 ];
-const shippingAddress = "0x7a51d9E5baDec2322916557F617b10209827a48f";
+
 const receivedABI = [
   {
     "anonymous": false,
@@ -470,16 +470,418 @@ const receivedABI = [
     "type": "function"
   }
 ];
-const receivedAddress = "0x5e724c7269AB1799013F9Eb76E13a26A54eC38aa";
+const loanABI = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "loanID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest_rate",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewLoanPlaced",
+    "type": "event"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "fallback",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "LoanRequestAddresses",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "LoanRequestList",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "interest_rate",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "LoanRequestMapping",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "interest_rate",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive",
+    "payable": true
+  },
+  {
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_interest_rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "loan_request",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  }
+];
+const loanApprovedABI = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "receiptID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "loanID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "finance_provider",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "qty",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "LoanApprovedEvent",
+    "type": "event"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "fallback",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "LoanReceiptAddresses",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "LoanReceiptMapping",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "loanID",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "interest_rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "LoanReceipts",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "loanID",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "interest_rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive",
+    "payable": true
+  },
+  {
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_loanID",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_provider",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_interest_rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "loan_approve",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  }
+];
+const receivedAddress = "0x1C57eE2cB9d8ecF5B528f149798c452B3D443670";
+const shippingAddress = "0xFB3FF7Cb9466201a90609bbA97a14676e3C930F6";
+const purchaseAddress = "0x767240cba30b563dDC659eDE0a8f641818c8001B";
+const loanAddress="0x826244f01084887570f3E67Be95aa43cB8F81788";
+const LoanApprovedAddress = "0x041a9889eAeFA244fA5A0540aa143c77985212da";
 
-const purchaseAddress = "0xbF0633a469D077FFB50E15e090709510A54B6f46";
+let loanInstance = new web3.eth.Contract(loanABI,loanAddress);
+let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,LoanApprovedAddress);
 let purchaseInstance = new web3.eth.Contract(purchaseAbi,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
-var pastOrderEvents,pastReceivingEvents,pastShippingEvents;
+var pastOrderEvents,pastReceivingEvents,pastShippingEvents, pastLoanEvents, pastLoanApprovedEvents;
 let order_ids = [];
 let shipping_ids = [];
 let bill_ids = [];
+let loan_ids = [];
+let loan_approved_ids = [];
 
 class EventDashboard extends Component {
     constructor(props) {
@@ -488,7 +890,8 @@ class EventDashboard extends Component {
             order_events: [],
             shipping_events: [],
             receiving_events: [],
-            buyer_account: '',
+            loan_events: [],
+            loan_approved_events: []
         }
     }
 
@@ -508,6 +911,18 @@ class EventDashboard extends Component {
           });
   
           pastReceivingEvents = await receivedInstance.getPastEvents('ProductReceived', {
+            fromBlock: 0,
+            toBlock: 'latest',
+            address: window.localStorage.getItem("buyer_account")
+          });
+
+          pastLoanEvents = await loanInstance.getPastEvents('NewLoanPlaced', {
+            fromBlock: 0,
+            toBlock: 'latest',
+            address: window.localStorage.getItem("buyer_account")
+          })
+
+          pastLoanApprovedEvents = await loanApprovedInstance.getPastEvents('LoanApprovedEvent', {
             fromBlock: 0,
             toBlock: 'latest',
             address: window.localStorage.getItem("buyer_account")
@@ -562,6 +977,30 @@ class EventDashboard extends Component {
         console.log("third fn done");
         console.log(bill_ids);
         //console.log(this.state.receiving_events);
+        for(let item of pastLoanEvents) {
+
+          if(!loan_ids.includes(item.returnValues.loanID)) {
+              this.setState(prevState => ({
+                ...prevState,
+                receiving_events: [...prevState.loan_events, item]
+              }));
+              loan_ids.push(item.returnValues.loanID);
+           }
+        } 
+        console.log("fourth fn done");
+        console.log(loan_ids);
+        for(let item of pastLoanApprovedEvents) {
+
+          if(!loan_approved_ids.includes(item.returnValues.receiptID)) {
+              this.setState(prevState => ({
+                ...prevState,
+                receiving_events: [...prevState.loan_approved_events, item]
+              }));
+              loan_approved_ids.push(item.returnValues.receiptID);
+           }
+        }
+        console.log("fifth fn done");
+        console.log(loan_approved_ids); 
     }
 
     render() {
@@ -581,6 +1020,16 @@ class EventDashboard extends Component {
              <li className="list-group-item"><NewEvent key={key} event={receiving_event} /> </li>
           </ul>
          });
+         const render_loan_events = this.state.loan_events.map((loan_event,key) => { 
+          return <ul key={key} className="list-group">
+             <li className="list-group-item"><NewEvent key={key} event={loan_event} /> </li>
+          </ul>
+         });
+         const render_loan_approved_events = this.state.loan_approved_events.map((loan_approved_event,key) => { 
+          return <ul key={key} className="list-group">
+             <li className="list-group-item"><NewEvent key={key} event={loan_approved_event} /> </li>
+          </ul>
+         });
         return (
             <>
              <br></br>
@@ -594,6 +1043,12 @@ class EventDashboard extends Component {
             </div>
             <div className="container m-3 p-3">
             {render_received_events}
+            </div>
+            <div className="container m-3 p-3">
+            {render_loan_events}
+            </div>
+            <div className="container m-3 p-3">
+            {render_loan_approved_events}
             </div>
             </>
         );

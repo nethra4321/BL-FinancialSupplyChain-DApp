@@ -62,6 +62,35 @@ class NewEvent extends Component {
                     <p>Amount: {this.props.event.returnValues.amount}</p>
                     </>
                 )}
+                {this.props.event.event==="NewLoanPlaced" && (
+                    <>
+                    <h4>Loan Request Event</h4>
+                    <muted>Mined in block Number: {this.props.event.blockNumber}</muted><br></br>
+                    <muted>Loan ID: {this.props.event.returnValues.loanID}</muted><br></br>
+                    <muted>Block Hash: {this.props.event.blockHash}</muted><br></br>
+                    <muted>ID: {this.props.event.id}</muted>
+                    <hr></hr>
+                    <p>Borrower: {this.props.event.returnValues.borrower}</p>
+                    <p>Provider: {this.props.event.returnValues.provider}</p>
+                    <p>Interest Rate: {this.props.event.returnValues.interest_rate}</p>
+                    <p>Amount: {this.props.event.returnValues.amount}</p>
+                    </>
+                )}
+                {this.props.event.event==="LoanApprovedEvent" && (
+                    <>
+                    <h4>Loan Approved Event</h4>
+                    <muted>Mined in block Number: {this.props.event.blockNumber}</muted><br></br>
+                    <muted>Receipt ID: {this.props.event.returnValues.receiptID}</muted><br></br>
+                    <muted>Block Hash: {this.props.event.blockHash}</muted><br></br>
+                    <muted>ID: {this.props.event.id}</muted>
+                    <hr></hr>
+                    <p>Loan ID: {this.props.event.returnValues.loanID}</p>
+                    <p>Borrower: {this.props.event.returnValues.buyer}</p>
+                    <p>Provider: {this.props.event.returnValues.finance_provider}</p>
+                    <p>Interest Rate: {this.props.event.returnValues.qty}</p>
+                    <p>Amount: {this.props.event.returnValues.amount}</p>
+                    </>
+                )}
             </div>
         );
     }

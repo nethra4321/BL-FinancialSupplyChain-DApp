@@ -14,7 +14,7 @@ contract Loan {
         uint256 interest_rate; //128 bytes and 10 decimal places   
     } 
 
-    LoanRequest public loan;
+    // LoanRequest public loan;
 
     // constructor(uint256 _amount, uint256 _interest_rate) {
     //     Loan memory init = Loan(payable(msg.sender), address(0x0), _amount, LoanStatus.Pending, false, _interest_rate);
@@ -34,20 +34,31 @@ contract Loan {
         return address(this).balance;
     }
 
- event NewLoanPlaced(address borrower, address provider, uint256 amount, uint256 interest_rate);
+ mapping(bytes32 => LoanRequest) public LoanRequestMapping;
+ LoanRequest[] public LoanRequestList;
+ bytes32[] public LoanRequestAddresses;
 
-    function approve_loan(address payable _borrower, address _provider, uint256 _interest_rate, uint256 _amount) public payable {
+ event NewLoanPlaced(bytes32 loanID, address borrower, address provider, uint256 amount, uint256 interest_rate);
 
+    function loan_request(address payable _borrower, address _provider, uint256 _interest_rate, uint256 _amount) public payable {
+        LoanRequest memory loan;
+        bytes32 loanID = keccak256(abi.encodePacked(_borrower,_provider,_interest_rate,_amount));
+        
         loan.borrower = _borrower;
         loan.provider = _provider;
         loan.amount = _amount;
         loan.interest_rate = _interest_rate;
-       
+        LoanRequestList.push(loan);
+
+        LoanRequestMapping[loanID] = loan;
+        LoanRequestAddresses.push(loanID);
+
         require(address(_provider).balance >= _amount, "Provider doesn't have enough funds");
         // loan.status = LoanStatus.Approved;
 
-        loan.borrower.transfer(msg.value);
+        //loan.borrower.transfer(msg.value); //transfer to the borrower
+        //payable(address(this)).transfer(msg.value); //transfer to the contract
 
-        emit NewLoanPlaced(loan.borrower, loan.provider, loan.amount, loan.interest_rate);
+        emit NewLoanPlaced(loanID, _borrower, _provider, _interest_rate, _amount);
     }
 }

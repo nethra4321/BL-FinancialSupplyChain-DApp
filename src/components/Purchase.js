@@ -468,9 +468,9 @@ const receivedABI = [
     "type": "function"
   }
 ];
-const receivedAddress = "0x5e724c7269AB1799013F9Eb76E13a26A54eC38aa";
-const shippingAddress = "0x7a51d9E5baDec2322916557F617b10209827a48f";
-const purchaseAddress = "0x45379A0feCE4FEB9E4f857FBdA3c2555eD193464";
+const receivedAddress = "0x1C57eE2cB9d8ecF5B528f149798c452B3D443670";
+const shippingAddress = "0xFB3FF7Cb9466201a90609bbA97a14676e3C930F6";
+const purchaseAddress = "0x767240cba30b563dDC659eDE0a8f641818c8001B";
 let purchaseInstance = new web3.eth.Contract(purchaseAbi,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
@@ -549,7 +549,7 @@ class Purchase extends Component {
             parseInt(this.state.purchase_form.qty),
             this.state.purchase_form.amount
         )
-            .send({from:buyer_address,value:web3.utils.toWei(this.state.purchase_form.amount.toString(), "ether"), gas:200000})
+            .send({from:buyer_address,value:web3.utils.toWei(this.state.purchase_form.amount.toString(), "ether"), gas:500000})
             .then((result) => {
                 console.log(result);
                 alert("Purchase made");
@@ -588,7 +588,7 @@ class Purchase extends Component {
               ret_values.vendor,
               ret_values.product,
               ret_values.quantity,
-              ret_values.amount).send({"from":this.state.buyer_account,"gas":300000},(res) => {
+              ret_values.amount).send({"from":this.state.buyer_account,"gas":500000},(res) => {
               console.log(res);
             }) 
         })
@@ -605,7 +605,7 @@ class Purchase extends Component {
           receivedInstance.methods.receive_product(ret_values.shipID,ret_values.orderID,ret_values.buyer,ret_values.vendor,
             ret_values.product,ret_values.num_days,ret_values.qty,ret_values.amount)
             .send(
-              {"from":this.state.buyer_account,"gas":300000},
+              {"from":this.state.buyer_account,"gas":500000},
               (res) => {
             console.log(res);
             console.log("bill generated");

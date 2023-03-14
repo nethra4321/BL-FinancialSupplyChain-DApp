@@ -27,7 +27,9 @@ contract Received {
          uint256 qty,
          uint256 amount);
 
-    mapping (bytes32 => Receipt) public receipts;
+    mapping (bytes32 => Receipt) public receiptMapping;
+    Receipt[] public ReceiptList;
+    bytes32[] public ReceiptListAddresses;
 
     function receive_product(bytes32 _shipID, bytes32 _orderID, address _buyer, address _vendor, string calldata _product, 
     uint8 _num_days, uint256 _qty, uint256 _amount) public {
@@ -43,7 +45,9 @@ contract Received {
         rec.num_days = _num_days;
         rec.qty = _qty;
         rec.amount = _amount;
-        receipts[billID] = rec;
+        receiptMapping[billID] = rec;
+        ReceiptList.push(rec);
+        ReceiptListAddresses.push(billID);
         
         emit ProductReceived(billID, rec.shipID, rec.orderID, rec.buyer, rec.vendor, rec.product, rec.num_days, rec.qty, rec.amount);
     }

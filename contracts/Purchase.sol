@@ -13,7 +13,9 @@ contract Purchase {
         // OrderStatus status;
     } //order in the blockchain
     string name;
-    mapping(bytes32 => Order) public orders;
+    mapping(bytes32 => Order) public orderMapping;
+    Order[] public orderList;
+    bytes32[] public orderListAddresses;
 
     event NewOrderPlaced(bytes32 orderId, address buyer, address vendor, string product, uint256 quantity, uint256 amount);
 
@@ -37,7 +39,10 @@ contract Purchase {
         purchase_order.amount = _amount;
         // purchase_order.status = OrderStatus.Order_Placed;
 
-        orders[orderID] = purchase_order;
+        orderMapping[orderID] = purchase_order;
+        orderList.push(purchase_order);
+        orderListAddresses.push(orderID);
+
         emit NewOrderPlaced(orderID, _buyer, _vendor, _product, _quantity, _amount);
 
         // payable(_vendor).transfer(_amount);
