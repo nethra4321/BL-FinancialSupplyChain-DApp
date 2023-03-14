@@ -301,7 +301,7 @@ const shippingABI = [
     "type": "function"
   }
 ];
-const shippingAddress = "0x7a51d9E5baDec2322916557F617b10209827a48f";
+
 const receivedABI = [
   {
     "anonymous": false,
@@ -469,8 +469,8 @@ const receivedABI = [
   }
 ];
 const receivedAddress = "0x5e724c7269AB1799013F9Eb76E13a26A54eC38aa";
-
-const purchaseAddress = "0xbF0633a469D077FFB50E15e090709510A54B6f46";
+const shippingAddress = "0x7a51d9E5baDec2322916557F617b10209827a48f";
+const purchaseAddress = "0x45379A0feCE4FEB9E4f857FBdA3c2555eD193464";
 let purchaseInstance = new web3.eth.Contract(purchaseAbi,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);

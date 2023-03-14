@@ -2,6 +2,7 @@
 import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
+import NewEvent from "./NewEvent";
 
 const web3 = new Web3('ws://localhost:7545');
 const purchaseAbi= [
@@ -476,112 +477,123 @@ let purchaseInstance = new web3.eth.Contract(purchaseAbi,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
 var pastOrderEvents,pastReceivingEvents,pastShippingEvents;
-
+let order_ids = [];
+let shipping_ids = [];
+let bill_ids = [];
 
 class EventDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // order_events: [],
-            // shipping_events: [],
-            // receiving_events: [],
-            // loan_events: [],
+            order_events: [],
+            shipping_events: [],
+            receiving_events: [],
+            buyer_account: '',
         }
     }
 
     listenEvent = async() => {
-        // contract to get past events
-  
-          //console.log(purchaseInstance);
-          //get past events
+        // function to get past events
+          //console.log(this.state.buyer_account);
           pastOrderEvents = await purchaseInstance.getPastEvents('NewOrderPlaced', {
               fromBlock: 0,
-              toBlock: 'latest'
+              toBlock: 'latest',
+              address: window.localStorage.getItem("buyer_account")
           });
   
           pastShippingEvents = await shippingInstance.getPastEvents('ProductShipped', {
             fromBlock: 0,
-            toBlock: 'latest'
+            toBlock: 'latest',
+            address: window.localStorage.getItem("buyer_account")
           });
   
           pastReceivingEvents = await receivedInstance.getPastEvents('ProductReceived', {
             fromBlock: 0,
-            toBlock: 'latest'
+            toBlock: 'latest',
+            address: window.localStorage.getItem("buyer_account")
           })
       }
 
     componentDidMount = async() => {
+      //componentDidMount rendered twice so order_ids got instantiated to empty array again and didn't register that its processed
+      //moved order ids to outside the lifecycle method
+        // this.setState(prevState => ({...prevState, buyer_account: window.localStorage.getItem("buyer_account")}));
         await this.listenEvent();
-        // console.log(pastOrderEvents);
-        // console.log(pastShippingEvents);
-        // console.log(pastReceivingEvents);
-        let order_ids = [];
-        let order_events = [];
-        let shipping_ids = [];
-        let shipping_events = [];
-        let bill_ids = [];
-        let bill_events = [];
-
+       
+        //console.log(pastOrderEvents);
         for(let item of pastOrderEvents) {
-            console.log(item);   
-            // if(!order_ids.includes(item.returnValues.orderId)) {
-            //     this.setState({
-            //         ...this.state, 
-            //         order_events: [...this.state.order_events, item]},
-            //         () => { console.log(this.state);});
-            // }
+            //console.log(item);   
             if(!order_ids.includes(item.returnValues.orderId)) {
-                order_ids.push(item.returnValues.orderId);
-                order_events.push(item);
-            };
-        }
-        
+                this.setState(prevState => ({
+                    ...prevState,
+                    order_events: [...prevState.order_events, item]}));
+                    order_ids.push(item.returnValues.orderId);
+                };
+            }
+        //console.log(this.state.order_events);
+        //console.log(order_ids);
+
+        console.log("first fn done");
+        console.log(order_ids);
         for(let item of pastShippingEvents) {
-            // if(!this.state.shipping_ids.includes(item.returnValues.shipID)) {
-            //     this.setState({
-            //         ...this.state, 
-            //         shipping_ids:[...this.state.shipping_ids,item.returnValues.shipID],
-            //         shipping_events: [...this.state.shipping_events, item]},
-            //         () => {});
-            // }
+          
             if(!shipping_ids.includes(item.returnValues.shipID)) {
+                this.setState(prevState => ({
+                  ...prevState,
+                  shipping_events: [...prevState.shipping_events,item]
+                }));
                 shipping_ids.push(item.returnValues.shipID);
-                shipping_events.push(item);
             }
         }
+        console.log("second fn done");
+        console.log(shipping_ids);
+        //console.log(this.state.shipping_events);
 
         for(let item of pastReceivingEvents) {
-            // if(!this.state.bill_ids.includes(item.returnValues.billID)) {
-            //     this.setState({
-            //         ...this.state, 
-            //         bill_ids:[...this.state.bill_ids,item.returnValues.billID],
-            //         receiving_events: [...this.state.receiving_events, item]},
-            //         () => {});
-            //     }
+
             if(!bill_ids.includes(item.returnValues.billID)) {
+                this.setState(prevState => ({
+                  ...prevState,
+                  receiving_events: [...prevState.receiving_events, item]
+                }));
                 bill_ids.push(item.returnValues.billID);
-                bill_events.push(item);
              }
         }
-        console.log(shipping_events);
-        console.log(bill_events);
+        console.log("third fn done");
+        console.log(bill_ids);
+        //console.log(this.state.receiving_events);
     }
 
     render() {
         console.log(this.state);
-        console.log(shipping_events);
-        // const bills = bill_events.map((bill,key) => {
-        //     return <ul class="list-group">
-        //         <h4>Event rendered</h4>
-        //     </ul>
-        // })
+        const render_order_events = this.state.order_events.map((order_event,key) => { 
+          return <ul key={key} className="list-group">
+             <li className="list-group-item"><NewEvent key={key} event={order_event} /> </li>
+          </ul>
+         });
+         const render_ship_events = this.state.shipping_events.map((shipping_event,key) => { 
+          return <ul key={key} className="list-group">
+             <li className="list-group-item"><NewEvent key={key} event={shipping_event} /> </li>
+          </ul>
+         });
+         const render_received_events = this.state.receiving_events.map((receiving_event,key) => { 
+          return <ul key={key} className="list-group">
+             <li className="list-group-item"><NewEvent key={key} event={receiving_event} /> </li>
+          </ul>
+         });
         return (
             <>
              <br></br>
             <Link to="/" className="m-3 text-decoration-underline">Go Back</Link>
             <br></br>
             <div className="container m-3 p-3">
-
+            {render_order_events}
+            </div>
+            <div className="container m-3 p-3">
+            {render_ship_events}
+            </div>
+            <div className="container m-3 p-3">
+            {render_received_events}
             </div>
             </>
         );

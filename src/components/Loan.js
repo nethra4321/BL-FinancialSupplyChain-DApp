@@ -123,7 +123,7 @@ const loanABI = [
       "payable": true
     }
   ];
-  const loanAddress="0xB985f5F4a9742e99e3baF66452a1C12753974C20";
+  const loanAddress="0xFd1b30A2966febF7EaD360357409905990Ff7E05";
 class Loan extends Component {
 
     constructor(props) {
