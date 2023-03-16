@@ -7,8 +7,8 @@ const web3 = new Web3("ws://127.0.0.1:7545");
 const loanABI = LoanJSON["abi"];
 const loanApprovedABI = LoanApprovedJSON["abi"];
 
-let loanAddress="0x826244f01084887570f3E67Be95aa43cB8F81788";
-let LoanApprovedAddress = "0x041a9889eAeFA244fA5A0540aa143c77985212da";
+let loanAddress="0x78fFE93CD2eeca516785BAf0c53b8B7F9E6E30A7";
+let LoanApprovedAddress = "0x2AdE045C375B692177826b06b901cFd67117766e";
 let loanInstance = new web3.eth.Contract(loanABI,loanAddress);
 let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,LoanApprovedAddress);
 class Loan extends Component {
