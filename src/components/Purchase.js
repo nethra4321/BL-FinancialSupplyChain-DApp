@@ -8,9 +8,9 @@ const web3 = new Web3('ws://localhost:7545');
 const purchaseABI = PurchaseJSON["abi"];
 const shippingABI = ShippingJSON["abi"];
 const receivedABI = ReceivedJSON["abi"];
-const receivedAddress = "0x1C57eE2cB9d8ecF5B528f149798c452B3D443670";
-const shippingAddress = "0xFB3FF7Cb9466201a90609bbA97a14676e3C930F6";
-const purchaseAddress = "0x767240cba30b563dDC659eDE0a8f641818c8001B";
+const receivedAddress = "0x6655765cac96C824dcBd554A11B667EDb73933D2";
+const shippingAddress = "0x27Bdd64d527FDe493Fb6700f8F11a3F28258cFA6";
+const purchaseAddress = "0xde9b24b86d581f6b6AaC5b7c796B3e83a1aFE593";
 let purchaseInstance = new web3.eth.Contract(purchaseABI,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
@@ -97,6 +97,7 @@ class Purchase extends Component {
             })
             .catch((error) => {
                 console.error("Transaction error:", error);
+                alert("Address not present in the whitelist");
             });
         console.log(purchaseInstance);
         console.log(buyer_address);

@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+import "./Whitelist.sol";
+
 // enum OrderStatus {Not_Started, Order_Placed, Vendor_Action, Vendor_Delivered, Order_Completed}
+// interface IWhiteList {
+//     function addAddress(address _address) external;
+//     function checkAddress(address _address) external view;
+// }
 
 contract Purchase {
     struct Order {
@@ -13,6 +19,10 @@ contract Purchase {
         // OrderStatus status;
     } //order in the blockchain
     string name;
+    address public whitelistAddress=0x32942f2B8ef09a73c45146Bc16680F775b26D317;
+
+    Whitelist whitelist = Whitelist(whitelistAddress);
+
     mapping(bytes32 => Order) public orderMapping;
     Order[] public orderList;
     bytes32[] public orderListAddresses;
@@ -28,6 +38,8 @@ contract Purchase {
     }
 
     function placePurchaseOrder(address _buyer, address _vendor, string calldata _product, uint256 _quantity, uint256 _amount) public payable {
+    
+        //whitelist.checkAddress(_buyer); //implements the whitelist
 
         bytes32 orderID = keccak256(abi.encodePacked(_buyer,_vendor,_product,_quantity,_amount));
         Order memory purchase_order;

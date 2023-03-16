@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
+import WhitelistJSON from "../build/contracts/Whitelist.json";
 
+
+const whitelistABI = WhitelistJSON["abi"];
+const whitelistAddress = "0x83887b8C4614b1dF823e7bA0D771F79F49979402";
 class Home extends Component {
 
     constructor(props) {
@@ -10,7 +14,8 @@ class Home extends Component {
             isConnected: false,
             buyer_account: '',
             ethBalance: '',
-            value: 10
+            value: 10,
+            admin: false
         }
       }
     
@@ -38,13 +43,18 @@ class Home extends Component {
             // console.log(userAccount);
             const account = userAccount[0]; //obtain current account
             console.log(account);
+            let admin = false;
             let accountBalance = await web3.eth.getBalance(account); 
             console.log(accountBalance);
-            this.setState({isConnected:true, buyer_account: account, ethBalance:accountBalance}, () => {
+            if(account === "0x42dCD7eDc82ab6671b51886B638243eCFeFcbBbC") {
+                admin = true;
+            }
+            this.setState({isConnected:true, buyer_account: account, ethBalance:accountBalance, admin: admin}, () => {
               console.log(this.state.isConnected);
               console.log(this.state.ethBalance);
               console.log(this.state.buyer_account);
-              window.localStorage.setItem("buyer_account",this.state.buyer_account)
+              window.localStorage.setItem("buyer_acc;ount",this.state.buyer_account);
+              window.localStorage.setItem("admin",this.state.admin);
               //gets updated
             })
         }
@@ -53,6 +63,31 @@ class Home extends Component {
       disconnect = () => {
         this.setState({isConnected:false});
         window.localStorage.removeItem("buyer_account");
+        window.localStorage.removeItem("admin");
+      }
+
+      whitelistReq = async() => {
+        //create instance of whitelist req contract - add it to whitelistreqarray
+        //in admin requested addresses should show - on approval - add it to whitelist array, rejection means delete
+        //if already added to whitelist, get alert saying already added to whitelist
+        //create instance of whitelist, get the addresses. if already there then above msg
+        const web3 = new Web3("ws://127.0.0.1:7545");
+        const whitelistInstance = new web3.eth.Contract(whitelistABI,whitelistAddress);
+        console.log(whitelistInstance);
+  
+        const allowedAddresses = await whitelistInstance.methods.getAddresses().call();
+        console.log(allowedAddresses);
+        if(allowedAddresses.includes(window.localStorage.getItem("buyer_account"))) {
+          alert("Already added to the whitelist");
+        }
+        else {
+          whitelistInstance.methods.addAddress(window.localStorage.getItem("buyer_account"))
+          .send({from:window.localStorage.getItem("buyer_account"),gas:300000})
+          .then((res) => {
+            console.log(res);
+            alert("Added to the whitelist");
+          })
+        }
       }
 
       componentDidMount = async() => {
@@ -102,6 +137,10 @@ class Home extends Component {
                   <br></br><br></br>
                   <div className="text-center">
                   <Link to="/event-dashboard" className="btn btn-danger">View Event History</Link>
+                  </div>
+                  <br></br><br></br>
+                  <div className="text-center">
+                  <button className="btn btn-danger" onClick={this.whitelistReq}>Request to add to whitelist</button>
                   </div>
                   <br></br><br></br>
                   <div className="text-center">
