@@ -19,7 +19,7 @@ contract Purchase {
         // OrderStatus status;
     } //order in the blockchain
     string name;
-    address public whitelistAddress=0x32942f2B8ef09a73c45146Bc16680F775b26D317;
+    address public whitelistAddress=0xb88A67885023A5503F6d145c3207eE4d4C31Dbb1;
 
     Whitelist whitelist = Whitelist(whitelistAddress);
 
@@ -39,7 +39,7 @@ contract Purchase {
 
     function placePurchaseOrder(address _buyer, address _vendor, string calldata _product, uint256 _quantity, uint256 _amount) public payable {
     
-        //whitelist.checkAddress(_buyer); //implements the whitelist
+    //    whitelist.checkAddress(_buyer); //implements the whitelist
 
         bytes32 orderID = keccak256(abi.encodePacked(_buyer,_vendor,_product,_quantity,_amount));
         Order memory purchase_order;

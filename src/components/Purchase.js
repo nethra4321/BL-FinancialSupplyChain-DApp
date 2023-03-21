@@ -4,13 +4,12 @@ import { Link, Navigate } from "react-router-dom";
 import PurchaseJSON from "../build/contracts/Purchase.json";
 import ShippingJSON from "../build/contracts/Shipping.json";
 import ReceivedJSON from "../build/contracts/Received.json";
+import { purchaseAddress, shippingAddress, receivedAddress } from "../constants";
 const web3 = new Web3('ws://localhost:7545');
 const purchaseABI = PurchaseJSON["abi"];
 const shippingABI = ShippingJSON["abi"];
 const receivedABI = ReceivedJSON["abi"];
-const receivedAddress = "0x6655765cac96C824dcBd554A11B667EDb73933D2";
-const shippingAddress = "0x27Bdd64d527FDe493Fb6700f8F11a3F28258cFA6";
-const purchaseAddress = "0xde9b24b86d581f6b6AaC5b7c796B3e83a1aFE593";
+
 let purchaseInstance = new web3.eth.Contract(purchaseABI,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
@@ -22,27 +21,27 @@ class Purchase extends Component {
             buyer_account: this.props.buyer_account,
             eth_balance: this.props.eth_balance,
             purchase_form: {
-                vendor:'Vendor A',
+                vendor:'Apollo Hospital',
                 vendor_address: '',
-                product:'Product A',
+                product:'Gloves',
                 qty:0,
                 amount: 0
             },
             vendors: [
                 {
-                    name:'Vendor A', 
-                    address:'0x19584378D47C295728BdD79027104C9714D03A48',
+                    name:'Apollo Hospital', 
+                    address:'0x0ddc4c262010E44838c15F8AB2bF4fCBFEaA7695',
                     products: [ 
-                    { product_name: 'Product A', cost: 2 },
-                    { product_name: 'Product B', cost: 6 },
+                    { product_name: 'Gloves', cost: 2 },
+                    { product_name: 'Syringes', cost: 6 },
                     ]
                 },
                 {
-                    name:'Vendor B',
-                    address:'0x97F014c59d8D5c70E2b5C30b2d9bC4138c2894D2', 
+                    name:'MGM Hospital',
+                    address:'0x0B2bc2815CEc2C4a45cCbF9B36B5B3aFCbe51E0C', 
                     products: [ 
-                    { product_name: 'Product A', cost: 3 },
-                    { product_name: 'Product B', cost: 5 },
+                    { product_name: 'Gloves', cost: 3 },
+                    { product_name: 'Syringes', cost: 5 },
                     ]
                 },
             ]
@@ -179,8 +178,8 @@ class Purchase extends Component {
                             <br></br>
                             {/* <input name="vendor" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value={this.state.purchase_form.vendor} onChange={this.handleChange} id="vendor" type="text" placeholder="Vendor" /> */}
                             <select name="vendor" onChange={this.handleChange}>
-                                <option>Vendor A</option>
-                                <option>Vendor B</option>
+                                <option>Apollo Hospital</option>
+                                <option>MGM Hospital</option>
                             </select>
                         </div>
                         <br></br>
@@ -191,8 +190,8 @@ class Purchase extends Component {
                             <br></br>
                             {/* <input name="product" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="product" value={this.state.purchase_form.product} onChange={this.handleChange} type="text" placeholder="Type of Product" /> */}
                             <select name="product" onChange={this.handleChange}>
-                                <option>Product A</option>
-                                <option>Product B</option>
+                                <option>Gloves</option>
+                                <option>Syringes</option>
                             </select>
                         </div>
                         <br></br>

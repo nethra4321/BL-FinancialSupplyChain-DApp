@@ -8,6 +8,7 @@ import ShippingJSON from "../build/contracts/Shipping.json";
 import ReceivedJSON from "../build/contracts/Received.json";
 import LoanJSON from "../build/contracts/Loan.json";
 import LoanApprovedJSON from "../build/contracts/LoanApproved.json";
+import { receivedAddress, shippingAddress, purchaseAddress, loanAddress, loanApprovedAddress } from "../constants";
 const web3 = new Web3('ws://localhost:7545');
 
 const purchaseABI = PurchaseJSON["abi"];
@@ -15,17 +16,13 @@ const loanABI = LoanJSON["abi"];
 const shippingABI = ShippingJSON["abi"];
 const receivedABI = ReceivedJSON["abi"];
 const loanApprovedABI = LoanApprovedJSON["abi"];
-const receivedAddress = "0x1C57eE2cB9d8ecF5B528f149798c452B3D443670";
-const shippingAddress = "0xFB3FF7Cb9466201a90609bbA97a14676e3C930F6";
-const purchaseAddress = "0x767240cba30b563dDC659eDE0a8f641818c8001B";
-const loanAddress="0x826244f01084887570f3E67Be95aa43cB8F81788";
-const LoanApprovedAddress = "0x041a9889eAeFA244fA5A0540aa143c77985212da";
 
 let loanInstance = new web3.eth.Contract(loanABI,loanAddress);
-let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,LoanApprovedAddress);
+let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,loanApprovedAddress);
 let purchaseInstance = new web3.eth.Contract(purchaseABI,purchaseAddress);
 let shippingInstance = new web3.eth.Contract(shippingABI, shippingAddress);
 let receivedInstance = new web3.eth.Contract(receivedABI, receivedAddress);
+
 var pastOrderEvents,pastReceivingEvents,pastShippingEvents, pastLoanEvents, pastLoanApprovedEvents;
 let order_ids = [];
 let shipping_ids = [];
@@ -53,30 +50,31 @@ class EventDashboard extends Component {
               toBlock: 'latest',
               address: window.localStorage.getItem("buyer_account")
           });
-  
+          console.log(pastOrderEvents);
           pastShippingEvents = await shippingInstance.getPastEvents('ProductShipped', {
             fromBlock: 0,
             toBlock: 'latest',
             address: window.localStorage.getItem("buyer_account")
           });
-  
+          console.log(pastShippingEvents);
           pastReceivingEvents = await receivedInstance.getPastEvents('ProductReceived', {
             fromBlock: 0,
             toBlock: 'latest',
             address: window.localStorage.getItem("buyer_account")
           });
-
+          console.log(pastReceivingEvents);
           pastLoanEvents = await loanInstance.getPastEvents('NewLoanPlaced', {
             fromBlock: 0,
             toBlock: 'latest',
             address: window.localStorage.getItem("buyer_account")
           })
-
+          console.log(pastLoanEvents);
           pastLoanApprovedEvents = await loanApprovedInstance.getPastEvents('LoanApprovedEvent', {
             fromBlock: 0,
             toBlock: 'latest',
             address: window.localStorage.getItem("buyer_account")
           })
+          console.log(pastLoanApprovedEvents);
       }
 
     componentDidMount = async() => {

@@ -3,14 +3,12 @@ import Web3 from "web3";
 import { Link, Navigate } from "react-router-dom";
 import LoanJSON from "../build/contracts/Loan.json";
 import LoanApprovedJSON from "../build/contracts/LoanApproved.json"
+import { loanAddress,loanApprovedAddress } from "../constants";
 const web3 = new Web3("ws://127.0.0.1:7545");
 const loanABI = LoanJSON["abi"];
 const loanApprovedABI = LoanApprovedJSON["abi"];
-
-let loanAddress="0x78fFE93CD2eeca516785BAf0c53b8B7F9E6E30A7";
-let LoanApprovedAddress = "0x2AdE045C375B692177826b06b901cFd67117766e";
 let loanInstance = new web3.eth.Contract(loanABI,loanAddress);
-let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,LoanApprovedAddress);
+let loanApprovedInstance = new web3.eth.Contract(loanApprovedABI,loanApprovedAddress);
 class Loan extends Component {
 
     constructor(props) {
@@ -23,8 +21,8 @@ class Loan extends Component {
                 interest_rate: 0,
             },
             finance_providers: [
-                { provider: 'ICICI', address:'0x58ad76d7b2a6E83CAb4b1122bfAbf42fc2abe28d', interest_rate: 20},
-                { provider: 'SBI', address:'0x46B1542FDa2cD96272690aEA1fEe9eC9E35Db806', interest_rate: 12}
+                { provider: 'ICICI', address:'0xcb32481350a4678bfF73a6faBF009e718c9E9115', interest_rate: 20},
+                { provider: 'SBI', address:'0xc9ED13f62076DB33d3F712c748604Fa92be6d375', interest_rate: 12}
             ]
         }
     }

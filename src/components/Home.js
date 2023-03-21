@@ -2,10 +2,11 @@ import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
 import WhitelistJSON from "../build/contracts/Whitelist.json";
-
-
+import WhiteListRequestJSON from "../build/contracts/WhitelistRequest.json";
+import { whitelistAddress, whitelistRequestAddress } from "../constants";
+let count = 1;
 const whitelistABI = WhitelistJSON["abi"];
-const whitelistAddress = "0x83887b8C4614b1dF823e7bA0D771F79F49979402";
+const whitelistRequestABI = WhiteListRequestJSON["abi"];
 class Home extends Component {
 
     constructor(props) {
@@ -15,7 +16,8 @@ class Home extends Component {
             buyer_account: '',
             ethBalance: '',
             value: 10,
-            admin: false
+            admin: false,
+            whitelistreq: []
         }
       }
     
@@ -53,7 +55,7 @@ class Home extends Component {
               console.log(this.state.isConnected);
               console.log(this.state.ethBalance);
               console.log(this.state.buyer_account);
-              window.localStorage.setItem("buyer_acc;ount",this.state.buyer_account);
+              window.localStorage.setItem("buyer_account",this.state.buyer_account);
               window.localStorage.setItem("admin",this.state.admin);
               //gets updated
             })
@@ -81,28 +83,68 @@ class Home extends Component {
           alert("Already added to the whitelist");
         }
         else {
-          whitelistInstance.methods.addAddress(window.localStorage.getItem("buyer_account"))
-          .send({from:window.localStorage.getItem("buyer_account"),gas:300000})
-          .then((res) => {
-            console.log(res);
-            alert("Added to the whitelist");
-          })
+          const whitelistRequestInstance = new web3.eth.Contract(whitelistRequestABI,whitelistRequestAddress);
+          const allowedAddresses = await whitelistRequestInstance.methods.getRequestedAddresses().call();
+          console.log(allowedAddresses);
+          if(allowedAddresses.includes(window.localStorage.getItem("buyer_account"))) {
+              alert("Already requested access previously. Wait for admin to approve");
+          }
+          else {
+            whitelistRequestInstance.methods.addRequestedAddress(window.localStorage.getItem("buyer_account"))
+            .send({from:window.localStorage.getItem("buyer_account"),gas:300000})
+            .then((res) => {
+              console.log(res);
+              alert("Requested access successfully");
+            })
+          }
         }
       }
 
       componentDidMount = async() => {
         let buyer_account = window.localStorage.getItem("buyer_account");
+        let admin = window.localStorage.getItem("admin");
         if(buyer_account !== null) {
-          const web3 = new Web3("http://127.0.0.1:7545");
+          const web3 = new Web3("ws://127.0.0.1:7545");
           let account_balance = await web3.eth.getBalance(buyer_account);
-          this.setState({...this.state, buyer_account:buyer_account, ethBalance: account_balance},()=>{})
+          this.setState({...this.state, buyer_account:buyer_account, ethBalance: account_balance, admin:admin}, async ()=>{
+              const whiteListRequestInstance = new web3.eth.Contract(whitelistRequestABI,whitelistRequestAddress);
+              const allowedAddresses = await whiteListRequestInstance.methods.getRequestedAddresses().call();
+              this.setState({...this.state, whitelistreq:[...this.state.whitelistreq,allowedAddresses]},() => {
+                console.log(this.state);
+              })
+          })
         }
       }
     
+      approveaddress = (address) => {
+        const web3 = new Web3("ws://127.0.0.1:7545");
+        const whitelistInstance = new web3.eth.Contract(whitelistABI,whitelistAddress);
+        console.log(whitelistInstance);
+        whitelistInstance.methods.addAddress(address)
+            .send({from:window.localStorage.getItem("buyer_account"),gas:300000})
+            .then((res) => {
+              console.log(res);
+              alert("Added to whitelist");
+              this.setState((prevState) => ({
+                ...prevState,
+                whitelistreq: prevState.whitelistreq.filter((add) => add !== address)
+              }))
+            })
+      }
+
       render() {
         let displayed_balance = this.state.ethBalance/1e18;
-        console.log(this.state.buyer_account);
-        console.log(this.state.eth_balance);
+        console.log(this.state);
+        const render_whitelist = this.state.whitelistreq.map((item,key) => {
+          if(key<this.state.whitelistreq.length/2) {
+            return (
+            <tr key={key}>
+            <td>{item}</td>
+            <td><button className="btn btn-primary" onClick={() => this.approveaddress(item[0])}>Approve</button></td>
+            </tr>
+            );
+          }
+       })
         console.log(window.localStorage.getItem("buyer_account"));
         return (
           <div className="container m-3 p-3">
@@ -115,7 +157,7 @@ class Home extends Component {
             )}
             </div>
             <div className="container m-3">
-            { (window.localStorage.getItem("buyer_account") !== null || this.state.isConnected ) && (
+            { ( (window.localStorage.getItem("buyer_account") !== null || this.state.isConnected ) && this.state.admin === "false") && (
                 <React.Fragment>
                   <p className="display-4 text-success">BL DApp</p>
                   <br></br>
@@ -149,6 +191,31 @@ class Home extends Component {
                     </button>
                   </div>
                 </React.Fragment>
+            )}
+            {( (window.localStorage.getItem("buyer_account") !== null || this.state.isConnected ) && this.state.admin === "true") && (
+              <>
+              <p class="display-4">Hello admin</p>
+              <br></br>
+              <p class="display-6">Whitelist requests</p>
+              <hr></hr>
+              <table class="table">
+                <thead>
+                  <tr>
+                  <th>Addresses</th>
+                  <th>Allow</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {render_whitelist}
+                </tbody>
+              </table>
+              <br></br><br></br>
+              <div className="text-center">
+                    <button className="btn btn-primary" onClick={this.disconnect}>
+                      Logout
+                    </button>
+                  </div>
+              </>
             )}
             </div>
             </div>
